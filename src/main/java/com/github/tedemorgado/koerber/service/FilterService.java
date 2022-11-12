@@ -2,6 +2,7 @@ package com.github.tedemorgado.koerber.service;
 
 import com.github.tedemorgado.koerber.controller.model.CreateFilter;
 import com.github.tedemorgado.koerber.controller.model.Filter;
+import com.github.tedemorgado.koerber.exception.BadRequestException;
 import com.github.tedemorgado.koerber.exception.EntityNotFoundException;
 import com.github.tedemorgado.koerber.persistence.model.FilterEntity;
 import com.github.tedemorgado.koerber.persistence.model.ScreenEntity;
@@ -35,27 +36,46 @@ public class FilterService {
       this.screenRepository = screenRepository;
    }
 
-   /*
-   • Create filter
-   • Update filter
-   • Soft delete filter
-   • List all filter (latest version) (Optional)
-    */
-   @Transactional
-   public Filter createFilter(final CreateFilter createFilter) {
-      final UserEntity userEntity = this.userRepository.findByUuid(createFilter.getUserId()).orElseThrow(() -> new EntityNotFoundException("User not found for id " + createFilter.getUserId()));
-      ScreenEntity screenEntity = null;
-      if (createFilter.getScreenId() != null) {
-         screenEntity = this.screenRepository.findByUuid(createFilter.getScreenId()).orElseThrow(() -> new EntityNotFoundException("Screen not found for id " + createFilter.getScreenId()));
-      }
-      final FilterEntity filterEntity = new FilterEntity();
-      filterEntity.setUuid(UUID.randomUUID());
-      filterEntity.setVersion(1L);
+   private static void mapFilterEntityWithCreateFilter(final CreateFilter createFilter, final UserEntity userEntity, final ScreenEntity screenEntity, final FilterEntity filterEntity) {
       filterEntity.setUser(userEntity);
       filterEntity.setScreen(screenEntity);
       filterEntity.setName(createFilter.getName());
       filterEntity.setData(createFilter.getData());
       filterEntity.setOutputFilter(createFilter.getOutputFilter());
+   }
+
+   /*
+   • Update filter
+   • Soft delete filter
+   • List all filter (latest version) (Optional)
+    */
+   @Transactional
+   public Filter updateFilter(final UUID filterId, final Filter filter) {
+      if (!filterId.equals(filter.getId())) {
+         throw new BadRequestException("Specified path filterId need to be the same as the object.");
+      }
+
+      final FilterEntity filterEntity = this.filterRepository.findAllByUuidOrderByVersionDesc(filterId)
+         .stream()
+         .findFirst()
+         .orElseThrow(() -> new EntityNotFoundException("Filter not found for id " + filter.getId()));
+
+      mapFilterEntityWithCreateFilter(filter, filterEntity.getUser(), filterEntity.getScreen(), filterEntity);
+      filterEntity.setOutputFilter(filter.getOutputFilter());
+      filterEntity.setVersion(filterEntity.getVersion() + 1);
+
+      return this.mapFilterEntityToFilter(this.filterRepository.save(filterEntity));
+   }
+
+   @Transactional
+   public Filter createFilter(final CreateFilter createFilter) {
+      final UserEntity userEntity = this.getUserEntity(createFilter.getUserId());
+      final ScreenEntity screenEntity = this.getScreenEntity(createFilter.getScreenId());
+
+      final FilterEntity filterEntity = new FilterEntity();
+      mapFilterEntityWithCreateFilter(createFilter, userEntity, screenEntity, filterEntity);
+      filterEntity.setUuid(UUID.randomUUID());
+      filterEntity.setVersion(1L);
 
       return this.mapFilterEntityToFilter(this.filterRepository.save(filterEntity));
    }
@@ -107,5 +127,16 @@ public class FilterService {
          .orElse(null);
 
       return new Filter(filterEntity.getUuid(), filterEntity.getUser().getUuid(), filterEntity.getName(), filterEntity.getData(), filterEntity.getOutputFilter(), screenId, filterEntity.getVersion());
+   }
+
+   private UserEntity getUserEntity(final UUID filter) {
+      return this.userRepository.findByUuid(filter).orElseThrow(() -> new EntityNotFoundException("User not found for id " + filter));
+   }
+
+   private ScreenEntity getScreenEntity(final UUID filter) {
+      if (filter != null) {
+         return this.screenRepository.findByUuid(filter).orElseThrow(() -> new EntityNotFoundException("Screen not found for id " + filter));
+      }
+      return null;
    }
 }

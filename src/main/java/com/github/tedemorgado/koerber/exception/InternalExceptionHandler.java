@@ -13,4 +13,10 @@ public class InternalExceptionHandler {
       final InternalException internalException = new InternalException(e.getMessage(), e.getCause());
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(internalException);
    }
+
+   @ExceptionHandler(value = {BadRequestException.class})
+   public ResponseEntity<InternalException> handleBadRequest(final BadRequestException e) {
+      final InternalException internalException = new InternalException(e.getMessage(), e.getCause());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(internalException);
+   }
 }

@@ -2,7 +2,7 @@ package com.github.tedemorgado.koerber.controller;
 
 import com.github.tedemorgado.koerber.controller.model.CreateFilter;
 import com.github.tedemorgado.koerber.controller.model.Filter;
-import com.github.tedemorgado.koerber.exception.EntityNotFoundException;
+import com.github.tedemorgado.koerber.exception.InternalException;
 import com.github.tedemorgado.koerber.service.FilterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,7 +52,7 @@ public class FilterController {
                @Content(
                   mediaType = MediaType.APPLICATION_JSON_VALUE,
                   schema = @Schema(
-                     implementation = EntityNotFoundException.class
+                     implementation = InternalException.class
                   )
                )
             }
@@ -62,6 +63,45 @@ public class FilterController {
    @ResponseStatus(HttpStatus.CREATED)
    public Filter createFilter(@RequestBody final CreateFilter createFilter) {
       return this.filterService.createFilter(createFilter);
+   }
+
+   @Operation(
+      summary = "Update specific filter",
+      responses = {
+         @ApiResponse(
+            responseCode = "200",
+            description = "Filter updated"
+         ),
+         @ApiResponse(
+            responseCode = "400",
+            description = "Bad request",
+            content = {
+               @Content(
+                  mediaType = MediaType.APPLICATION_JSON_VALUE,
+                  schema = @Schema(
+                     implementation = InternalException.class
+                  )
+               )
+            }
+         ),
+         @ApiResponse(
+            responseCode = "404",
+            description = "Filter not found",
+            content = {
+               @Content(
+                  mediaType = MediaType.APPLICATION_JSON_VALUE,
+                  schema = @Schema(
+                     implementation = InternalException.class
+                  )
+               )
+            }
+         )
+      }
+   )
+   @PutMapping(path = "/{filterId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+   @ResponseStatus(HttpStatus.OK)
+   public Filter updateFilter(@PathVariable final UUID filterId, @RequestBody final Filter filter) {
+      return this.filterService.updateFilter(filterId, filter);
    }
 
    @Operation(
@@ -106,7 +146,7 @@ public class FilterController {
                @Content(
                   mediaType = MediaType.APPLICATION_JSON_VALUE,
                   schema = @Schema(
-                     implementation = EntityNotFoundException.class
+                     implementation = InternalException.class
                   )
                )
             }
@@ -146,7 +186,7 @@ public class FilterController {
                @Content(
                   mediaType = MediaType.APPLICATION_JSON_VALUE,
                   schema = @Schema(
-                     implementation = EntityNotFoundException.class
+                     implementation = InternalException.class
                   )
                )
             }

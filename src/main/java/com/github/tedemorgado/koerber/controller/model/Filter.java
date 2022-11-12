@@ -4,8 +4,12 @@ import java.util.UUID;
 
 public class Filter extends CreateFilter {
 
-   private final UUID id;
-   private final Long version;
+   private UUID id;
+   private Long version;
+
+   public Filter() {
+      super();
+   }
 
    public Filter(final UUID id, final UUID userId, final String name, final String data, final String outputFilter,
                  final UUID screenId, final Long version) {
@@ -18,7 +22,15 @@ public class Filter extends CreateFilter {
       return this.id;
    }
 
+   public void setId(final UUID id) {
+      this.id = id;
+   }
+
    public Long getVersion() {
       return this.version;
+   }
+
+   public void setVersion(final Long version) {
+      this.version = version;
    }
 }
