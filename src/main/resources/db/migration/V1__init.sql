@@ -17,13 +17,14 @@ create table screen
 
 create table filter
 (
-    id           SERIAL NOT NULL,
-    uuid         UUID   NOT NULL,
-    user_id      bigint NOT NULL,
+    id           SERIAL           NOT NULL,
+    uuid         UUID             NOT NULL,
+    user_id      bigint           NOT NULL,
     name         character varying(255),
     Data         text,
     outputFilter character varying(255),
     screen_id    bigint,
+    version      bigint default 1 not null,
     PRIMARY KEY (id),
     CONSTRAINT fk_filter_user_id_user_id FOREIGN KEY (user_id) REFERENCES users (id),
     CONSTRAINT fk_filter_screen_id_screen_id FOREIGN KEY (screen_id) REFERENCES screen (id)
@@ -31,10 +32,12 @@ create table filter
 
 create table branch
 (
-    id                 serial NOT NULL,
-    uuid               UUID   NOT NULL,
-    original_filter_id bigint not null,
-    filter_id          bigint not null,
+    id                      serial           NOT NULL,
+    uuid                    UUID             NOT NULL,
+    original_filter_id      bigint           not null,
+    original_filter_version bigint           not null,
+    filter_id               bigint           not null,
+    version                 bigint default 1 not null,
     primary key (id),
     CONSTRAINT fk_branch_original_filter_id_filter_id FOREIGN KEY (original_filter_id) REFERENCES filter (id),
     CONSTRAINT fk_branch_filter_id_filter_id FOREIGN KEY (filter_id) REFERENCES filter (id)
@@ -83,18 +86,21 @@ create table filter_audit
     Data         text,
     outputFilter character varying(255),
     screen_id    bigint,
+    version      bigint   not null,
     primary key (rev, id),
     constraint fk_filter_audit_audit_info foreign key (rev) references audit_info (revision_id)
 );
 
 create table branch_audit
 (
-    id                 bigint   not null,
-    rev                bigint   not null,
-    revtype            smallint not null,
-    uuid               UUID     NOT NULL,
-    original_filter_id bigint   not null,
-    filter_id          bigint   not null,
+    id                      bigint   not null,
+    rev                     bigint   not null,
+    revtype                 smallint not null,
+    uuid                    UUID     NOT NULL,
+    original_filter_id      bigint   not null,
+    original_filter_version bigint   not null,
+    filter_id               bigint   not null,
+    version                 bigint   not null,
     primary key (rev, id),
     constraint fk_branch_audit_audit_info foreign key (rev) references audit_info (revision_id)
 );
