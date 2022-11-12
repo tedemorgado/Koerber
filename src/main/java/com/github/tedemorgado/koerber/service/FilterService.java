@@ -5,6 +5,8 @@ import com.github.tedemorgado.koerber.exception.EntityNotFoundException;
 import com.github.tedemorgado.koerber.persistence.model.FilterEntity;
 import com.github.tedemorgado.koerber.persistence.model.ScreenEntity;
 import com.github.tedemorgado.koerber.persistence.repository.FilterRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +34,16 @@ public class FilterService {
    • List all filter (latest version) (Optional)
     */
 
+
+   @Transactional(readOnly = true)
+   public Page<Filter> getAllFilters(final Pageable pageable) {
+      return null;
+      /*return this.filterRepository
+         .distinct(pageable)
+         .map(this::mapFilterEntityToFilter);*/
+   }
+
+   @Transactional(readOnly = true)
    public Set<Long> getFilterVersions(final UUID uuid) {
       final Set<Long> versions = this.filterRepository.findAllByUuidOrderByVersionDesc(uuid)
          .stream()
@@ -60,12 +72,15 @@ public class FilterService {
       }
 
       return filterEntity
-         .map(fe -> {
-            final UUID screenId = Optional.ofNullable(fe.getScreen())
-               .map(ScreenEntity::getUuid)
-               .orElse(null);
-            return new Filter(fe.getUuid(), fe.getUser().getUuid(), fe.getName(), fe.getData(), fe.getOutputFilter(), screenId, fe.getVersion());
-         })
+         .map(this::mapFilterEntityToFilter)
          .orElseThrow(() -> new EntityNotFoundException("No filter found with id " + uuid));
+   }
+
+   private Filter mapFilterEntityToFilter(final FilterEntity filterEntity) {
+      final UUID screenId = Optional.ofNullable(filterEntity.getScreen())
+         .map(ScreenEntity::getUuid)
+         .orElse(null);
+
+      return new Filter(filterEntity.getUuid(), filterEntity.getUser().getUuid(), filterEntity.getName(), filterEntity.getData(), filterEntity.getOutputFilter(), screenId, filterEntity.getVersion());
    }
 }

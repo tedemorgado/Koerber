@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,20 @@ public class FilterController {
       this.filterService = filterService;
    }
 
+   @Operation(
+      summary = "Get a list of all the filters on the latest version",
+      responses = {
+         @ApiResponse(
+            responseCode = "200",
+            description = "The list of all filters on their latest versions."
+         )
+      }
+   )
+   @GetMapping()
+   @ResponseStatus(HttpStatus.OK)
+   public Page<Filter> getAllFilters() {
+      return this.filterService.getAllFilters(null);
+   }
 
    @Operation(
       summary = "Get all versions from a filter",
