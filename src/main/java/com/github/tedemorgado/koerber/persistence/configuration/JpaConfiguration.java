@@ -3,7 +3,6 @@ package com.github.tedemorgado.koerber.persistence.configuration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.envers.repository.config.EnableEnversRepositories;
 import org.springframework.data.envers.repository.support.EnversRevisionRepositoryFactoryBean;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
@@ -12,6 +11,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
    basePackages = {"com.github.tedemorgado.koerber.persistence.repository"},
    repositoryFactoryBeanClass = EnversRevisionRepositoryFactoryBean.class
 )
-@EnableJpaAuditing
+//@EnableJpaAuditing
 public class JpaConfiguration {
 }

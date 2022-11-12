@@ -1,7 +1,5 @@
 package com.github.tedemorgado.koerber.persistence.model;
 
-import org.hibernate.envers.Audited;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +15,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "filter")
-@Audited
+//@Audited
 public class FilterEntity {
 
    @Id

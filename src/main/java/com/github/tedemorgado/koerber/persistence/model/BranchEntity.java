@@ -1,7 +1,5 @@
 package com.github.tedemorgado.koerber.persistence.model;
 
-import org.hibernate.envers.Audited;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "branch")
-@Audited
+//@Audited
 public class BranchEntity {
 
    @Id
@@ -43,8 +41,6 @@ public class BranchEntity {
    )
    @JoinColumn(name = "filter_id")
    private FilterEntity filter;
-
-   private Long version;
 
    public Long getId() {
       return this.id;
@@ -84,13 +80,5 @@ public class BranchEntity {
 
    public void setFilter(final FilterEntity filter) {
       this.filter = filter;
-   }
-
-   public Long getVersion() {
-      return this.version;
-   }
-
-   public void setVersion(final Long version) {
-      this.version = version;
    }
 }

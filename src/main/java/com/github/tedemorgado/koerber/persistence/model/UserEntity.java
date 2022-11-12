@@ -1,7 +1,5 @@
 package com.github.tedemorgado.koerber.persistence.model;
 
-import org.hibernate.envers.Audited;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@Audited
+//@Audited
 public class UserEntity {
 
    @Id

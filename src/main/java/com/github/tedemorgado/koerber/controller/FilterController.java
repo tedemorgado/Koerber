@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -197,5 +198,57 @@ public class FilterController {
    @ResponseStatus(HttpStatus.OK)
    public Filter getFilterById(@PathVariable final UUID filterId, @RequestParam(required = false) final Long version) {
       return this.filterService.getFilterById(filterId, version);
+   }
+
+   @Operation(
+      summary = "Get filter by id",
+      parameters = {
+         @Parameter(
+            name = "filterId",
+            in = ParameterIn.PATH,
+            required = true,
+            example = "4413fb3e-d8f9-41ad-ace6-18816fda1e68"
+         ),
+         @Parameter(
+            name = "version",
+            in = ParameterIn.QUERY,
+            example = "1"
+         )
+      },
+      responses = {
+         @ApiResponse(
+            responseCode = "200",
+            description = "The list of all available filters."
+         ),
+         @ApiResponse(
+            responseCode = "400",
+            description = "Bad request",
+            content = {
+               @Content(
+                  mediaType = MediaType.APPLICATION_JSON_VALUE,
+                  schema = @Schema(
+                     implementation = InternalException.class
+                  )
+               )
+            }
+         ),
+         @ApiResponse(
+            responseCode = "404",
+            description = "Specified filter not found",
+            content = {
+               @Content(
+                  mediaType = MediaType.APPLICATION_JSON_VALUE,
+                  schema = @Schema(
+                     implementation = InternalException.class
+                  )
+               )
+            }
+         )
+      }
+   )
+   @DeleteMapping("/{filterId}")
+   @ResponseStatus(HttpStatus.OK)
+   public void deleteFilterById(@PathVariable final UUID filterId) {
+      this.filterService.deleteFilter(filterId);
    }
 }

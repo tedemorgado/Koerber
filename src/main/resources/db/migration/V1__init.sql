@@ -32,12 +32,11 @@ create table filter
 
 create table branch
 (
-    id                      serial           NOT NULL,
-    uuid                    UUID             NOT NULL,
-    original_filter_id      bigint           not null,
-    original_filter_version bigint           not null,
-    filter_id               bigint           not null,
-    version                 bigint default 1 not null,
+    id                      serial NOT NULL,
+    uuid                    UUID   NOT NULL,
+    original_filter_id      bigint not null,
+    original_filter_version bigint not null,
+    filter_id               bigint not null,
     primary key (id),
     CONSTRAINT fk_branch_original_filter_id_filter_id FOREIGN KEY (original_filter_id) REFERENCES filter (id),
     CONSTRAINT fk_branch_filter_id_filter_id FOREIGN KEY (filter_id) REFERENCES filter (id)
@@ -100,7 +99,6 @@ create table branch_aud
     original_filter_id      bigint,
     original_filter_version bigint,
     filter_id               bigint,
-    version                 bigint,
     primary key (rev, id),
     constraint fk_branch_audit_audit_info foreign key (rev) references audit_info (revision_id)
 );

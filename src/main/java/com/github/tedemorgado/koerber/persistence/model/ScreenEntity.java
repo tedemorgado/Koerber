@@ -1,7 +1,5 @@
 package com.github.tedemorgado.koerber.persistence.model;
 
-import org.hibernate.envers.Audited;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "screen")
-@Audited
+//@Audited
 public class ScreenEntity {
 
    @Id
