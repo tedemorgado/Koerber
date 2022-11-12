@@ -4,6 +4,7 @@ import com.github.tedemorgado.koerber.persistence.model.audit.AuditEntity;
 import org.hibernate.envers.RevisionListener;
 
 import java.time.Clock;
+import java.util.UUID;
 
 public class AuditEntityListener implements RevisionListener {
 
@@ -16,7 +17,8 @@ public class AuditEntityListener implements RevisionListener {
    @Override
    public void newRevision(final Object revisionEntity) {
       final AuditEntity auditEntity = (AuditEntity) revisionEntity;
-      auditEntity.setUserId("Need to do it");
+      // TODO: 12/11/2022  
+      auditEntity.setUserId(UUID.randomUUID());
       auditEntity.setTimestamp(this.clock.millis());
    }
 }

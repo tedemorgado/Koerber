@@ -52,7 +52,7 @@ create table audit_info
     user_id       UUID   not null
 );
 
-create table screen_audit
+create table screen_aud
 (
     id           bigint   not null,
     rev          bigint   not null,
@@ -64,7 +64,7 @@ create table screen_audit
     constraint fk_screen_audit_audit_info foreign key (rev) references audit_info (revision_id)
 );
 
-create table user_audit
+create table user_aud
 (
     id      bigint   not null,
     rev     bigint   not null,
@@ -75,7 +75,7 @@ create table user_audit
     constraint fk_user_audit_audit_info foreign key (rev) references audit_info (revision_id)
 );
 
-create table filter_audit
+create table filter_aud
 (
     id            bigint   not null,
     rev           bigint   not null,
@@ -91,7 +91,7 @@ create table filter_audit
     constraint fk_filter_audit_audit_info foreign key (rev) references audit_info (revision_id)
 );
 
-create table branch_audit
+create table branch_aud
 (
     id                      bigint   not null,
     rev                     bigint   not null,

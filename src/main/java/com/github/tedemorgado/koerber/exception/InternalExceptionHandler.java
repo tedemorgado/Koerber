@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class InternalExceptionHandler {
 
    @ExceptionHandler(value = {EntityNotFoundException.class})
-   public ResponseEntity<RuntimeException> handleEntityNotFound(final EntityNotFoundException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+   public ResponseEntity<InternalException> handleEntityNotFound(final EntityNotFoundException e) {
+      final InternalException internalException = new InternalException(e.getMessage(), e.getCause());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(internalException);
    }
 }

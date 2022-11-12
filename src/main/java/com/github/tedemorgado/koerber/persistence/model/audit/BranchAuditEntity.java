@@ -1,7 +1,6 @@
 package com.github.tedemorgado.koerber.persistence.model.audit;
 
 import com.github.tedemorgado.koerber.persistence.model.FilterEntity;
-import org.hibernate.envers.Audited;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,8 +15,7 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "branch")
-@Audited
+@Table(name = "branch_aud")
 public class BranchAuditEntity {
 
    @Id
@@ -37,6 +35,7 @@ public class BranchAuditEntity {
    @JoinColumn(name = "original_filter_id")
    private FilterEntity originalFilter;
 
+   @Column(name = "original_filter_version")
    private Long originalFilterVersion;
 
    @ManyToOne(

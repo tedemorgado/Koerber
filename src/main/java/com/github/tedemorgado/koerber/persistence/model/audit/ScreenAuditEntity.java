@@ -1,7 +1,5 @@
 package com.github.tedemorgado.koerber.persistence.model.audit;
 
-import org.hibernate.envers.Audited;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,8 +10,7 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "screen_audit")
-@Audited
+@Table(name = "screen_aud")
 public class ScreenAuditEntity {
 
    @Id
@@ -27,6 +24,7 @@ public class ScreenAuditEntity {
 
    private String name;
 
+   @Column(name = "content_json")
    @Lob
    private String contentJson;
 

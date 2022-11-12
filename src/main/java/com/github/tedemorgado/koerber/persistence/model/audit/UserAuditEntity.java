@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users_audit")
+@Table(name = "users_aud")
 public class UserAuditEntity {
 
    @Id

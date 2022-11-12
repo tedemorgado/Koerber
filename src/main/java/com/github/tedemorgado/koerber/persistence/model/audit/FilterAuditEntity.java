@@ -2,7 +2,6 @@ package com.github.tedemorgado.koerber.persistence.model.audit;
 
 import com.github.tedemorgado.koerber.persistence.model.ScreenEntity;
 import com.github.tedemorgado.koerber.persistence.model.UserEntity;
-import org.hibernate.envers.Audited;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,8 +17,7 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "filter")
-@Audited
+@Table(name = "filter_aud")
 public class FilterAuditEntity {
 
    @Id

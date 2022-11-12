@@ -1,5 +1,6 @@
 package com.github.tedemorgado.koerber.controller;
 
+import com.github.tedemorgado.koerber.controller.model.CreateFilter;
 import com.github.tedemorgado.koerber.controller.model.Filter;
 import com.github.tedemorgado.koerber.exception.EntityNotFoundException;
 import com.github.tedemorgado.koerber.service.FilterService;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -32,6 +35,33 @@ public class FilterController {
 
    public FilterController(final FilterService filterService) {
       this.filterService = filterService;
+   }
+
+   @Operation(
+      summary = "Create new filter",
+      responses = {
+         @ApiResponse(
+            responseCode = "201",
+            description = "New filter created"
+         ),
+         @ApiResponse(
+            responseCode = "404",
+            description = "User or Screen not found",
+            content = {
+               @Content(
+                  mediaType = MediaType.APPLICATION_JSON_VALUE,
+                  schema = @Schema(
+                     implementation = EntityNotFoundException.class
+                  )
+               )
+            }
+         )
+      }
+   )
+   @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
+   @ResponseStatus(HttpStatus.CREATED)
+   public Filter createFilter(@RequestBody final CreateFilter createFilter) {
+      return this.filterService.createFilter(createFilter);
    }
 
    @Operation(

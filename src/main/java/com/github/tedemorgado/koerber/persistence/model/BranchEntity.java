@@ -3,6 +3,7 @@ package com.github.tedemorgado.koerber.persistence.model;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -32,6 +33,7 @@ public class BranchEntity {
    @JoinColumn(name = "original_filter_id")
    private FilterEntity originalFilter;
 
+   @Column(name = "original_filter_version")
    private Long originalFilterVersion;
 
    @ManyToOne(

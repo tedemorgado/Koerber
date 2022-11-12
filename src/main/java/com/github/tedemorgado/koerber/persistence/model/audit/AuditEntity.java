@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.UUID;
 
 @Entity
 @Table(name = "audit_info")
@@ -32,7 +33,7 @@ public class AuditEntity {
    @RevisionTimestamp
    private Long timestamp;
 
-   private String userId;
+   private UUID userId;
 
    public Long getId() {
       return this.id;
@@ -50,11 +51,11 @@ public class AuditEntity {
       this.timestamp = timestamp;
    }
 
-   public String getUserId() {
+   public UUID getUserId() {
       return this.userId;
    }
 
-   public void setUserId(final String userId) {
+   public void setUserId(final UUID userId) {
       this.userId = userId;
    }
 }

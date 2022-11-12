@@ -1,10 +1,14 @@
 package com.github.tedemorgado.koerber.service;
 
+import com.github.tedemorgado.koerber.controller.model.CreateFilter;
 import com.github.tedemorgado.koerber.controller.model.Filter;
 import com.github.tedemorgado.koerber.exception.EntityNotFoundException;
 import com.github.tedemorgado.koerber.persistence.model.FilterEntity;
 import com.github.tedemorgado.koerber.persistence.model.ScreenEntity;
+import com.github.tedemorgado.koerber.persistence.model.UserEntity;
 import com.github.tedemorgado.koerber.persistence.repository.FilterRepository;
+import com.github.tedemorgado.koerber.persistence.repository.ScreenRepository;
+import com.github.tedemorgado.koerber.persistence.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,9 +26,13 @@ import java.util.stream.Collectors;
 public class FilterService {
 
    private final FilterRepository filterRepository;
+   private final UserRepository userRepository;
+   private final ScreenRepository screenRepository;
 
-   public FilterService(final FilterRepository filterRepository) {
+   public FilterService(final FilterRepository filterRepository, final UserRepository userRepository, final ScreenRepository screenRepository) {
       this.filterRepository = filterRepository;
+      this.userRepository = userRepository;
+      this.screenRepository = screenRepository;
    }
 
    /*
@@ -33,7 +41,24 @@ public class FilterService {
    • Soft delete filter
    • List all filter (latest version) (Optional)
     */
+   @Transactional
+   public Filter createFilter(final CreateFilter createFilter) {
+      final UserEntity userEntity = this.userRepository.findByUuid(createFilter.getUserId()).orElseThrow(() -> new EntityNotFoundException("User not found for id " + createFilter.getUserId()));
+      ScreenEntity screenEntity = null;
+      if (createFilter.getScreenId() != null) {
+         screenEntity = this.screenRepository.findByUuid(createFilter.getScreenId()).orElseThrow(() -> new EntityNotFoundException("Screen not found for id " + createFilter.getScreenId()));
+      }
+      final FilterEntity filterEntity = new FilterEntity();
+      filterEntity.setUuid(UUID.randomUUID());
+      filterEntity.setVersion(1L);
+      filterEntity.setUser(userEntity);
+      filterEntity.setScreen(screenEntity);
+      filterEntity.setName(createFilter.getName());
+      filterEntity.setData(createFilter.getData());
+      filterEntity.setOutputFilter(createFilter.getOutputFilter());
 
+      return this.mapFilterEntityToFilter(this.filterRepository.save(filterEntity));
+   }
 
    @Transactional(readOnly = true)
    public Page<Filter> getAllFilters(final Pageable pageable) {
