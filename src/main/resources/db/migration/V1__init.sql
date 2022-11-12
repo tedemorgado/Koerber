@@ -8,23 +8,23 @@ create table users
 
 create table screen
 (
-    id          SERIAL NOT NULL,
-    uuid        UUID   NOT NULL,
-    name        character varying(255),
-    contentJson text,
+    id           SERIAL NOT NULL,
+    uuid         UUID   NOT NULL,
+    name         character varying(255),
+    content_json text,
     PRIMARY KEY (id)
 );
 
 create table filter
 (
-    id           SERIAL           NOT NULL,
-    uuid         UUID             NOT NULL,
-    user_id      bigint           NOT NULL,
-    name         character varying(255),
-    Data         text,
-    outputFilter character varying(255),
-    screen_id    bigint,
-    version      bigint default 1 not null,
+    id            SERIAL           NOT NULL,
+    uuid          UUID             NOT NULL,
+    user_id       bigint           NOT NULL,
+    name          character varying(255),
+    Data          text,
+    output_filter character varying(255),
+    screen_id     bigint,
+    version       bigint default 1 not null,
     PRIMARY KEY (id),
     CONSTRAINT fk_filter_user_id_user_id FOREIGN KEY (user_id) REFERENCES users (id),
     CONSTRAINT fk_filter_screen_id_screen_id FOREIGN KEY (screen_id) REFERENCES screen (id)
@@ -54,12 +54,12 @@ create table audit_info
 
 create table screen_audit
 (
-    id          bigint   not null,
-    rev         bigint   not null,
-    revtype     smallint not null,
-    uuid        UUID,
-    name        character varying(255),
-    contentJson text,
+    id           bigint   not null,
+    rev          bigint   not null,
+    revtype      smallint not null,
+    uuid         UUID,
+    name         character varying(255),
+    content_json text,
     primary key (rev, id),
     constraint fk_screen_audit_audit_info foreign key (rev) references audit_info (revision_id)
 );
@@ -77,16 +77,16 @@ create table user_audit
 
 create table filter_audit
 (
-    id           bigint   not null,
-    rev          bigint   not null,
-    revtype      smallint not null,
-    uuid         UUID,
-    user_id      bigint,
-    name         character varying(255),
-    Data         text,
-    outputFilter character varying(255),
-    screen_id    bigint,
-    version      bigint,
+    id            bigint   not null,
+    rev           bigint   not null,
+    revtype       smallint not null,
+    uuid          UUID,
+    user_id       bigint,
+    name          character varying(255),
+    Data          text,
+    output_filter character varying(255),
+    screen_id     bigint,
+    version       bigint,
     primary key (rev, id),
     constraint fk_filter_audit_audit_info foreign key (rev) references audit_info (revision_id)
 );
@@ -104,3 +104,11 @@ create table branch_audit
     primary key (rev, id),
     constraint fk_branch_audit_audit_info foreign key (rev) references audit_info (revision_id)
 );
+
+insert into users(uuid, name)
+values ('4413fb3e-d8f9-41ad-ace6-18816fda1e68', 'user1'),
+       ('7a2678dc-9402-4532-88bf-ff58459130db', 'user2');
+
+insert into filter(uuid, user_id, name, Data, output_filter, screen_id, version)
+values ('66b6049c-cf3d-4756-a350-e4170bbb9fd0', '1', 'filter1', 'data', 'outputfilter', null, 1),
+       ('66b6049c-cf3d-4756-a350-e4170bbb9fd0', '1', 'filter1', 'data2', 'outputfilte2r', null, 2);

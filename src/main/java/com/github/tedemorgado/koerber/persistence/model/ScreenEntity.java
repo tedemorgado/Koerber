@@ -2,6 +2,7 @@ package com.github.tedemorgado.koerber.persistence.model;
 
 import org.hibernate.envers.Audited;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,6 +24,7 @@ public class ScreenEntity {
 
    private String name;
 
+   @Column(name = "content_json")
    @Lob
    private String contentJson;
 

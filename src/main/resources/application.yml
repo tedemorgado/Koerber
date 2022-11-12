@@ -14,16 +14,22 @@ info:
     context-path: /${spring.application.name}/v${spring.application.majorVersion}
 
 spring:
+  h2:
+    console:
+      enabled: true
   application:
     name: koerber
     version: "@project.version@"
     majorVersion: ${APP_VERSION:1}
   datasource:
-    url: jdbc:h2:mem:mydb;MODE=PostgreSQL
+    url: jdbc:h2:mem:mydb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;IGNORECASE=TRUE;
     username: test
     password: test
     driverClassName: org.h2.Driver
   jpa:
+    properties:
+      hibernate:
+        default_schema: KOERBER
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: none
@@ -32,7 +38,7 @@ spring:
   flyway:
     placeholders:
       bdUser: binding_group
-    schemas: koerber
+    schemas: KOERBER
     locations: classpath:db/migration
 
 logging:

@@ -40,12 +40,12 @@ public class FilterEntity {
    @Lob
    private String data;
 
+   @Column(name = "output_filter")
    private String outputFilter;
 
    @ManyToOne(
       cascade = {CascadeType.ALL},
-      fetch = FetchType.EAGER,
-      optional = false
+      fetch = FetchType.EAGER
    )
    @JoinColumn(name = "screen_id")
    private ScreenEntity screen;

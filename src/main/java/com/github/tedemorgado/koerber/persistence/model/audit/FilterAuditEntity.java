@@ -45,6 +45,7 @@ public class FilterAuditEntity {
    @Lob
    private String data;
 
+   @Column(name = "output_filter")
    private String outputFilter;
 
    @ManyToOne(
