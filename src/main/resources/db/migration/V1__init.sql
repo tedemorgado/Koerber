@@ -42,71 +42,15 @@ create table branch
     CONSTRAINT fk_branch_filter_id_filter_id FOREIGN KEY (filter_id) REFERENCES filter (id)
 );
 
-
--- AUDIT
-create table audit_info
-(
-    revision_id   serial primary key,
-    rev_timestamp bigint not null,
-    user_id       UUID   not null
-);
-
-create table screen_aud
-(
-    id           bigint   not null,
-    rev          bigint   not null,
-    revtype      smallint not null,
-    uuid         UUID,
-    name         character varying(255),
-    content_json text,
-    primary key (rev, id),
-    constraint fk_screen_audit_audit_info foreign key (rev) references audit_info (revision_id)
-);
-
-create table user_aud
-(
-    id      bigint   not null,
-    rev     bigint   not null,
-    revtype smallint not null,
-    uuid    UUID,
-    name    character varying(255),
-    primary key (rev, id),
-    constraint fk_user_audit_audit_info foreign key (rev) references audit_info (revision_id)
-);
-
-create table filter_aud
-(
-    id            bigint   not null,
-    rev           bigint   not null,
-    revtype       smallint not null,
-    uuid          UUID,
-    user_id       bigint,
-    name          character varying(255),
-    Data          text,
-    output_filter character varying(255),
-    screen_id     bigint,
-    version       bigint,
-    primary key (rev, id),
-    constraint fk_filter_audit_audit_info foreign key (rev) references audit_info (revision_id)
-);
-
-create table branch_aud
-(
-    id                      bigint   not null,
-    rev                     bigint   not null,
-    revtype                 smallint not null,
-    uuid                    UUID,
-    original_filter_id      bigint,
-    original_filter_version bigint,
-    filter_id               bigint,
-    primary key (rev, id),
-    constraint fk_branch_audit_audit_info foreign key (rev) references audit_info (revision_id)
-);
-
 insert into users(uuid, name)
 values ('4413fb3e-d8f9-41ad-ace6-18816fda1e68', 'user1'),
        ('7a2678dc-9402-4532-88bf-ff58459130db', 'user2');
 
 insert into filter(uuid, user_id, name, Data, output_filter, screen_id, version)
 values ('66b6049c-cf3d-4756-a350-e4170bbb9fd0', '1', 'filter1', 'data', 'outputfilter', null, 1),
-       ('45262bd8-3870-430e-b004-4cca08265894', '1', 'filter1', 'data2', 'outputfilte2r', null, 2);
+       ('45262bd8-3870-430e-b004-4cca08265894', '1', 'filter2', 'data2', 'outputfilte2r', null, 1),
+       ('f693c0e1-ef4c-4580-995c-96b136e299fb', '2', 'filter3', 'data2', 'outputfilter3', null, 1),
+       ('18f34399-decc-4955-98b8-4774856aeb31', '2', 'This is a filter branch', 'data2', 'outputfilterbranch', null, 1);
+
+insert into branch(uuid, original_filter_id, original_filter_version, filter_id)
+values ('42bd549a-d066-4330-a6a5-e5855c79ccc1', 3, 1, 1);
