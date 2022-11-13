@@ -76,6 +76,8 @@ public class FilterService {
          throw new BadRequestException("There are a branch associated to this filter");
       });
 
+      filterEntity.setScreen(null);
+      filterEntity.setUser(null);
       this.filterRepository.delete(filterEntity);
    }
 

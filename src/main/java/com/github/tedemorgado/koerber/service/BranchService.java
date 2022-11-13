@@ -50,16 +50,28 @@ public class BranchService {
    @Transactional
    public void deleteFilterBranch(final UUID branchId) {
       final BranchEntity branchEntity = this.getBranchEntity(branchId);
+      final FilterEntity filterEntity = branchEntity.getFilter();
+
+      branchEntity.setOriginalFilter(null);
+      branchEntity.setFilter(null);
+
       this.branchRepository.delete(branchEntity);
+
+      filterEntity.setUser(null);
+      filterEntity.setScreen(null);
+
+      this.filterRepository.delete(filterEntity);
    }
 
    @Transactional
    public void mergeBranch(final UUID branchId) {
       final BranchEntity branchEntity = this.getBranchEntity(branchId);
-      this.branchRepository.delete(branchEntity);
-
       final FilterEntity originalFilterEntity = branchEntity.getOriginalFilter();
       final FilterEntity newFilterEntity = branchEntity.getFilter();
+
+      branchEntity.setOriginalFilter(null);
+      branchEntity.setFilter(null);
+      this.branchRepository.delete(branchEntity);
 
       originalFilterEntity.setOutputFilter(newFilterEntity.getOutputFilter());
       originalFilterEntity.setData(newFilterEntity.getData());
@@ -68,6 +80,11 @@ public class BranchService {
       originalFilterEntity.setVersion(originalFilterEntity.getVersion() + 1);
 
       this.filterRepository.save(originalFilterEntity);
+
+      newFilterEntity.setScreen(null);
+      newFilterEntity.setUser(null);
+
+      this.filterRepository.delete(newFilterEntity);
    }
 
    private FilterEntity getFilterEntity(final UUID filterId) {
