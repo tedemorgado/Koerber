@@ -135,7 +135,7 @@ public class BranchController {
          )
       }
    )
-   @DeleteMapping("/{branchId}")
+   @PostMapping("/{branchId}")
    @ResponseStatus(HttpStatus.OK)
    public void mergeBranch(@PathVariable final UUID branchId) {
       this.branchService.mergeBranch(branchId);
