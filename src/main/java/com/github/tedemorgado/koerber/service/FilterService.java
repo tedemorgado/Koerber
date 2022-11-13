@@ -81,7 +81,6 @@ public class FilterService {
    }
 
    /*
-   • Soft delete filter
    • List all filter (latest version) (Optional)
     */
    @Transactional(readOnly = true)
