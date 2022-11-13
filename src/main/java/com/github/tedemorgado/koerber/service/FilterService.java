@@ -12,8 +12,6 @@ import com.github.tedemorgado.koerber.persistence.repository.BranchRepository;
 import com.github.tedemorgado.koerber.persistence.repository.FilterRepository;
 import com.github.tedemorgado.koerber.persistence.repository.ScreenRepository;
 import com.github.tedemorgado.koerber.persistence.repository.UserRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,17 +76,6 @@ public class FilterService {
       }
 
       this.filterRepository.delete(filterEntity);
-   }
-
-   /*
-   • List all filter (latest version) (Optional)
-    */
-   @Transactional(readOnly = true)
-   public Page<Filter> getAllFilters(final Pageable pageable) {
-      return null;
-      /*return this.filterRepository
-         .distinct(pageable)
-         .map(this::mapFilterEntityToFilter);*/
    }
 
    @Transactional(readOnly = true)

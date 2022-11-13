@@ -49,17 +49,40 @@ public class BranchService {
          .get();
    }
 
-   /*
-• Update a filter on a branch
-• Soft delete a branch (Optional)
-• List all branches of a filter (Optional)
-• Merge a branch with a filter.
-    */
+   @Transactional
+   public void deleteFilterBranch(final UUID branchId) {
+      final BranchEntity branchEntity = this.getBranchEntity(branchId);
+      this.filterRepository.delete(branchEntity.getFilter());
+      this.branchRepository.delete(branchEntity);
+   }
+
+   @Transactional
+   public void mergeBranch(final UUID branchId) {
+      final BranchEntity branchEntity = this.getBranchEntity(branchId);
+      final FilterEntity originalFilterEntity = branchEntity.getOriginalFilter();
+      final FilterEntity newFilterEntity = branchEntity.getFilter();
+
+      originalFilterEntity.setOutputFilter(newFilterEntity.getOutputFilter());
+      originalFilterEntity.setData(newFilterEntity.getData());
+      originalFilterEntity.setName(newFilterEntity.getName());
+      originalFilterEntity.setScreen(newFilterEntity.getScreen());
+      originalFilterEntity.setVersion(originalFilterEntity.getVersion() + 1);
+
+      this.filterRepository.save(originalFilterEntity);
+      this.filterRepository.delete(newFilterEntity);
+      this.branchRepository.delete(branchEntity);
+   }
+
    private FilterEntity getFilterEntity(final UUID filterId) {
       return this.filterRepository.findAllByUuidOrderByVersionDesc(filterId)
          .stream()
          .findFirst()
          .orElseThrow(() -> new EntityNotFoundException("Filter not found for id " + filterId));
+   }
+
+   private BranchEntity getBranchEntity(final UUID branchId) {
+      return this.branchRepository.findByUuid(branchId)
+         .orElseThrow(() -> new EntityNotFoundException("Branch not found for id " + branchId));
    }
 
    private FilterEntity cloneFilterEntity(final FilterEntity filter) {
