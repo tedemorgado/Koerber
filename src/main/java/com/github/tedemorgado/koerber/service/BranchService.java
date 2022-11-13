@@ -13,7 +13,6 @@ import com.github.tedemorgado.koerber.persistence.repository.FilterRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,10 +29,9 @@ public class BranchService {
 
    @Transactional
    public FilterBranch createFilterBranch(final CreateFilterBranch createFilterBranch) {
-      final List<BranchEntity> branchEntities = this.branchRepository.findByOriginalFilter_Uuid(createFilterBranch.getFilterId());
-      if (!branchEntities.isEmpty()) {
+      this.branchRepository.findByFilter_Uuid(createFilterBranch.getFilterId()).ifPresent(be -> {
          throw new BadRequestException("Creating branch from another branch is not acceptable");
-      }
+      });
 
       final FilterEntity filterEntity = this.getFilterEntity(createFilterBranch.getFilterId());
       final FilterEntity newFilterEntity = this.filterRepository.save(this.cloneFilterEntity(filterEntity));
@@ -52,13 +50,14 @@ public class BranchService {
    @Transactional
    public void deleteFilterBranch(final UUID branchId) {
       final BranchEntity branchEntity = this.getBranchEntity(branchId);
-      this.filterRepository.delete(branchEntity.getFilter());
       this.branchRepository.delete(branchEntity);
    }
 
    @Transactional
    public void mergeBranch(final UUID branchId) {
       final BranchEntity branchEntity = this.getBranchEntity(branchId);
+      this.branchRepository.delete(branchEntity);
+
       final FilterEntity originalFilterEntity = branchEntity.getOriginalFilter();
       final FilterEntity newFilterEntity = branchEntity.getFilter();
 
@@ -69,8 +68,6 @@ public class BranchService {
       originalFilterEntity.setVersion(originalFilterEntity.getVersion() + 1);
 
       this.filterRepository.save(originalFilterEntity);
-      this.filterRepository.delete(newFilterEntity);
-      this.branchRepository.delete(branchEntity);
    }
 
    private FilterEntity getFilterEntity(final UUID filterId) {

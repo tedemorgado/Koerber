@@ -4,7 +4,6 @@ import com.github.tedemorgado.koerber.controller.model.CreateFilter;
 import com.github.tedemorgado.koerber.controller.model.Filter;
 import com.github.tedemorgado.koerber.exception.BadRequestException;
 import com.github.tedemorgado.koerber.exception.EntityNotFoundException;
-import com.github.tedemorgado.koerber.persistence.model.BranchEntity;
 import com.github.tedemorgado.koerber.persistence.model.FilterEntity;
 import com.github.tedemorgado.koerber.persistence.model.ScreenEntity;
 import com.github.tedemorgado.koerber.persistence.model.UserEntity;
@@ -68,12 +67,14 @@ public class FilterService {
 
    @Transactional
    public void deleteFilter(final UUID filterId) {
-      final FilterEntity filterEntity = this.getFilterEntity(filterId);
-      final Optional<BranchEntity> branchEntity = this.branchRepository.findByOriginalFilter_Id(filterEntity.getId());
+      this.branchRepository.findByFilter_Uuid(filterId).ifPresent(be -> {
+         throw new BadRequestException("Branch filters can only be deleted via a branch");
+      });
 
-      if (branchEntity.isPresent()) {
+      final FilterEntity filterEntity = this.getFilterEntity(filterId);
+      this.branchRepository.findByOriginalFilter_Id(filterEntity.getId()).ifPresent(be -> {
          throw new BadRequestException("There are a branch associated to this filter");
-      }
+      });
 
       this.filterRepository.delete(filterEntity);
    }

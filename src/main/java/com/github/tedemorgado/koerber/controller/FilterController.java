@@ -185,7 +185,7 @@ public class FilterController {
    }
 
    @Operation(
-      summary = "Get filter by id",
+      summary = "Delete a specific filter",
       parameters = {
          @Parameter(
             name = "filterId",

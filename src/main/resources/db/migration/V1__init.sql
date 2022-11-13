@@ -109,4 +109,4 @@ values ('4413fb3e-d8f9-41ad-ace6-18816fda1e68', 'user1'),
 
 insert into filter(uuid, user_id, name, Data, output_filter, screen_id, version)
 values ('66b6049c-cf3d-4756-a350-e4170bbb9fd0', '1', 'filter1', 'data', 'outputfilter', null, 1),
-       ('66b6049c-cf3d-4756-a350-e4170bbb9fd0', '1', 'filter1', 'data2', 'outputfilte2r', null, 2);
+       ('45262bd8-3870-430e-b004-4cca08265894', '1', 'filter1', 'data2', 'outputfilte2r', null, 2);
